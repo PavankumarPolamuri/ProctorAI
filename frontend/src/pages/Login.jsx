@@ -37,30 +37,38 @@ const Login = () => {
     try {
       const user = await login(email, password);
       
-      // Determine effective user role safely
+      // Determine effective user role safely from authenticated user object
       let userRole = user?.role;
       if (typeof userRole === 'object' && userRole?.name) {
         userRole = userRole.name;
       }
-      if (!userRole) {
-        userRole = (email && email.toLowerCase().includes('admin')) ? 'ADMIN' : (loginMode || 'STUDENT');
-      }
-      if (user) {
-        user.role = userRole;
+      if (typeof userRole === 'string') {
+        userRole = userRole.toUpperCase();
       }
 
-      // Extra verification
-      if (loginMode && userRole !== loginMode) {
-        logout(); // Force logout
-        setError(`Access Denied: You are trying to log in as a ${userRole} on the ${loginMode} portal.`);
+      if (!userRole) {
+        setError('Login failed: User role was not returned by the server.');
         setLoading(false);
         return;
-      } 
-      
+      }
+
+      user.role = userRole;
+
+      // Check role authorization
       if (userRole === 'ADMIN') {
         navigate('/admin/dashboard');
-      } else {
+        return;
+      }
+
+      if (userRole === 'STUDENT') {
+        if (loginMode === 'ADMIN') {
+          logout();
+          setError('Access Denied: Student accounts cannot access the Admin Portal.');
+          setLoading(false);
+          return;
+        }
         navigate('/student/dashboard');
+        return;
       }
     } catch (err) {
       if (err.response && (err.response.status === 401 || err.response.status === 404)) {
