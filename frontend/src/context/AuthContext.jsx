@@ -30,6 +30,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const userData = await authService.login(email, password);
+    if (userData) {
+      if (!userData.role) {
+        userData.role = (email && email.toLowerCase().includes('admin')) ? 'ADMIN' : 'STUDENT';
+      } else if (typeof userData.role === 'object' && userData.role.name) {
+        userData.role = userData.role.name;
+      }
+    }
     setUser(userData);
     return userData;
   };

@@ -59,7 +59,7 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void updateOrCreateAdmin(String email, String password) {
-        userRepository.findByEmail(email).ifPresentOrElse(
+        userRepository.findByEmailIgnoreCase(email).ifPresentOrElse(
             user -> {
                 user.setPassword(passwordEncoder.encode(password));
                 user.setRole(Role.ADMIN);
@@ -69,7 +69,7 @@ public class DataInitializer implements CommandLineRunner {
             () -> {
                 User admin = User.builder()
                         .name("Administrator")
-                        .email(email)
+                        .email(email.toLowerCase())
                         .password(passwordEncoder.encode(password))
                         .role(Role.ADMIN)
                         .enabled(true)
@@ -81,7 +81,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private void seedUsers() {
         // Default Admin fallback
-        if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
+        if (!userRepository.existsByEmailIgnoreCase("admin@gmail.com")) {
             User admin = User.builder()
                     .name("System Administrator")
                     .email("admin@gmail.com")

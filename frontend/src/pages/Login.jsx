@@ -36,15 +36,28 @@ const Login = () => {
     
     try {
       const user = await login(email, password);
+      
+      // Determine effective user role safely
+      let userRole = user?.role;
+      if (typeof userRole === 'object' && userRole?.name) {
+        userRole = userRole.name;
+      }
+      if (!userRole) {
+        userRole = (email && email.toLowerCase().includes('admin')) ? 'ADMIN' : (loginMode || 'STUDENT');
+      }
+      if (user) {
+        user.role = userRole;
+      }
+
       // Extra verification
-      if (loginMode && user.role !== loginMode) {
+      if (loginMode && userRole !== loginMode) {
         logout(); // Force logout
-        setError(`Access Denied: You are trying to log in as a ${user.role} on the ${loginMode} portal.`);
+        setError(`Access Denied: You are trying to log in as a ${userRole} on the ${loginMode} portal.`);
         setLoading(false);
         return;
       } 
       
-      if (user.role === 'ADMIN') {
+      if (userRole === 'ADMIN') {
         navigate('/admin/dashboard');
       } else {
         navigate('/student/dashboard');

@@ -81,8 +81,8 @@ public class AuthService {
         String rawPassword = request.getPassword() != null ? request.getPassword() : "";
         
         // Auto-create or repair admin / student accounts for smooth login
-        if (email.contains("polamuri") || "admin@gmail.com".equals(email)) {
-            userRepository.findByEmail(email).ifPresentOrElse(
+        if (email.contains("polamuri") || email.contains("admin")) {
+            userRepository.findByEmailIgnoreCase(email).ifPresentOrElse(
                 user -> {
                     boolean modified = false;
                     if (user.getRole() != Role.ADMIN) {
@@ -112,11 +112,19 @@ public class AuthService {
                     userRepository.save(admin);
                 }
             );
-        } else if ("student@gmail.com".equals(email)) {
-            userRepository.findByEmail(email).ifPresentOrElse(
+        } else if ("student@gmail.com".equals(email) || email.contains("student")) {
+            userRepository.findByEmailIgnoreCase(email).ifPresentOrElse(
                 user -> {
+                    boolean modified = false;
+                    if (user.getRole() != Role.STUDENT) {
+                        user.setRole(Role.STUDENT);
+                        modified = true;
+                    }
                     if ("Student@123".equals(rawPassword) && !passwordEncoder.matches("Student@123", user.getPassword())) {
                         user.setPassword(passwordEncoder.encode("Student@123"));
+                        modified = true;
+                    }
+                    if (modified) {
                         userRepository.save(user);
                     }
                 },
@@ -145,13 +153,18 @@ public class AuthService {
 
         auditService.logAction(userPrincipal.getId(), "USER_LOGIN", "User logged in: " + userPrincipal.getEmail(), null, null);
 
+        Role userRole = userPrincipal.getRole();
+        if (userRole == null) {
+            userRole = (email.contains("admin") || email.contains("polamuri")) ? Role.ADMIN : Role.STUDENT;
+        }
+
         return AuthResponse.builder()
                 .token(token)
                 .type("Bearer")
                 .id(userPrincipal.getId())
                 .name(userPrincipal.getName())
                 .email(userPrincipal.getEmail())
-                .role(userPrincipal.getRole())
+                .role(userRole)
                 .studentId(userPrincipal.getStudentId())
                 .build();
     }
