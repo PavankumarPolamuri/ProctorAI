@@ -78,68 +78,27 @@ public class AuthService {
     @Transactional
     public AuthResponse login(AuthRequest request) {
         String email = request.getEmail() != null ? request.getEmail().trim().toLowerCase() : "";
-        String rawPassword = request.getPassword() != null ? request.getPassword() : "";
-        
-        // Auto-create or repair admin / student accounts for smooth login
-        if (email.contains("polamuri") || email.contains("admin")) {
-            userRepository.findByEmailIgnoreCase(email).ifPresentOrElse(
-                user -> {
-                    boolean modified = false;
-                    if (user.getRole() != Role.ADMIN) {
-                        user.setRole(Role.ADMIN);
-                        modified = true;
-                    }
-                    if ("Admin@123".equals(rawPassword) && !passwordEncoder.matches("Admin@123", user.getPassword())) {
-                        user.setPassword(passwordEncoder.encode("Admin@123"));
-                        modified = true;
-                    } else if ("123456".equals(rawPassword) && !passwordEncoder.matches("123456", user.getPassword())) {
-                        user.setPassword(passwordEncoder.encode("123456"));
-                        modified = true;
-                    }
-                    if (modified) {
-                        userRepository.save(user);
-                    }
-                },
-                () -> {
-                    String initialPass = "Admin@123".equals(rawPassword) ? "Admin@123" : "123456";
-                    User admin = User.builder()
-                            .name("Administrator")
-                            .email(email)
-                            .password(passwordEncoder.encode(initialPass))
-                            .role(Role.ADMIN)
-                            .enabled(true)
-                            .build();
-                    userRepository.save(admin);
-                }
-            );
-        } else if ("student@gmail.com".equals(email) || email.contains("student")) {
-            userRepository.findByEmailIgnoreCase(email).ifPresentOrElse(
-                user -> {
-                    boolean modified = false;
-                    if (user.getRole() != Role.STUDENT) {
-                        user.setRole(Role.STUDENT);
-                        modified = true;
-                    }
-                    if ("Student@123".equals(rawPassword) && !passwordEncoder.matches("Student@123", user.getPassword())) {
-                        user.setPassword(passwordEncoder.encode("Student@123"));
-                        modified = true;
-                    }
-                    if (modified) {
-                        userRepository.save(user);
-                    }
-                },
-                () -> {
-                    User student = User.builder()
-                            .name("Demo Student")
-                            .email(email)
-                            .password(passwordEncoder.encode("Student@123"))
-                            .role(Role.STUDENT)
-                            .studentId("ST101")
-                            .enabled(true)
-                            .build();
-                    userRepository.save(student);
-                }
-            );
+
+        // Fallback auto-repair for default demo admin/student if missing from database
+        if ("admin@gmail.com".equals(email) && !userRepository.existsByEmailIgnoreCase("admin@gmail.com")) {
+            User admin = User.builder()
+                    .name("System Administrator")
+                    .email("admin@gmail.com")
+                    .password(passwordEncoder.encode("Admin@123"))
+                    .role(Role.ADMIN)
+                    .enabled(true)
+                    .build();
+            userRepository.save(admin);
+        } else if ("student@gmail.com".equals(email) && !userRepository.existsByEmailIgnoreCase("student@gmail.com")) {
+            User student = User.builder()
+                    .name("Demo Student")
+                    .email("student@gmail.com")
+                    .password(passwordEncoder.encode("Student@123"))
+                    .role(Role.STUDENT)
+                    .studentId("ST101")
+                    .enabled(true)
+                    .build();
+            userRepository.save(student);
         }
 
         Authentication authentication = authenticationManager.authenticate(
@@ -151,12 +110,13 @@ public class AuthService {
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        auditService.logAction(userPrincipal.getId(), "USER_LOGIN", "User logged in: " + userPrincipal.getEmail(), null, null);
+        // Fetch database user to extract guaranteed role and current entity state
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseGet(() -> userRepository.findById(userPrincipal.getId()).orElse(null));
 
-        Role userRole = userPrincipal.getRole();
-        if (userRole == null) {
-            userRole = (email.contains("admin") || email.contains("polamuri")) ? Role.ADMIN : Role.STUDENT;
-        }
+        Role role = (user != null && user.getRole() != null) ? user.getRole() : userPrincipal.getRole();
+
+        auditService.logAction(userPrincipal.getId(), "USER_LOGIN", "User logged in: " + userPrincipal.getEmail(), null, null);
 
         return AuthResponse.builder()
                 .token(token)
@@ -164,7 +124,7 @@ public class AuthService {
                 .id(userPrincipal.getId())
                 .name(userPrincipal.getName())
                 .email(userPrincipal.getEmail())
-                .role(userRole)
+                .role(role)
                 .studentId(userPrincipal.getStudentId())
                 .build();
     }
