@@ -15,7 +15,10 @@ class WebSocketService {
     }
 
     const token = localStorage.getItem('jwt_token');
-    const wsUrl = import.meta.env.VITE_WS_URL || '/ws';
+    let wsUrl = import.meta.env.VITE_WS_URL || '/ws';
+    if (import.meta.env.VITE_WS_URL && !import.meta.env.VITE_WS_URL.endsWith('/ws')) {
+      wsUrl = import.meta.env.VITE_WS_URL.replace(/\/+$/, '') + '/ws';
+    }
 
     const socket = new SockJS(`${wsUrl}?token=${token || ''}`);
 

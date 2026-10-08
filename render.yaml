@@ -26,8 +26,14 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        sync: false
+        fromService:
+          type: web
+          name: proctorai-backend
+          envVarKey: RENDER_EXTERNAL_URL
       - key: VITE_WS_URL
-        sync: false
+        fromService:
+          type: web
+          name: proctorai-backend
+          envVarKey: RENDER_EXTERNAL_URL
 
 
