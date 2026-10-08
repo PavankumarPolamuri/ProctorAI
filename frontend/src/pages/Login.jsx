@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Shield, User, Eye, EyeOff, Camera, FileText, Clock, ShieldCheck, ChevronRight } from 'lucide-react';
+import { Shield, User, Eye, EyeOff, Camera, FileText, Clock, ShieldCheck, ChevronRight, Key } from 'lucide-react';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -190,6 +190,34 @@ const Login = () => {
                 </div>
               ) : (
                 <form className="space-y-5 relative z-10" onSubmit={handleSubmit}>
+                  {/* Demo Credentials Notice */}
+                  <div 
+                    onClick={() => {
+                      if (loginMode === 'ADMIN') {
+                        setEmail('admin@gmail.com');
+                        setPassword('Admin@123');
+                      } else {
+                        setEmail('student@gmail.com');
+                        setPassword('Student@123');
+                      }
+                    }}
+                    className="bg-[#241715]/80 border border-[#D97706]/40 hover:border-[#F59E0B]/70 rounded-xl p-3.5 mb-2 flex items-start space-x-3 cursor-pointer hover:bg-[#2C1C19] transition-all group"
+                  >
+                    <div className="p-1.5 bg-[#D97706]/20 rounded-lg text-[#F59E0B] group-hover:scale-105 transition-transform mt-0.5">
+                      <Key className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1 text-xs">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-bold text-[#F8FAFC] text-xs">Demo Credentials</span>
+                        <span className="text-[10px] text-[#F59E0B] group-hover:underline font-semibold">Click to fill</span>
+                      </div>
+                      <div className="text-slate-300 font-mono space-y-0.5 text-[12px]">
+                        <p><span className="text-slate-400">Email:</span> {loginMode === 'ADMIN' ? 'admin@gmail.com' : 'student@gmail.com'}</p>
+                        <p><span className="text-slate-400">Password:</span> {loginMode === 'ADMIN' ? 'Admin@123' : 'Student@123'}</p>
+                      </div>
+                    </div>
+                  </div>
+
                   {error && (
                     <div className="bg-red-500/10 border-l-4 border-red-500 p-3.5 rounded-lg">
                       <p className="text-xs sm:text-sm text-red-400 font-medium">{error}</p>

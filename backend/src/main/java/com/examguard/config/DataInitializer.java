@@ -52,6 +52,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         updateOrCreateAdmin(adminEmail.trim(), adminPass.trim());
+        updateOrCreateAdmin("admin@gmail.com", "Admin@123");
         updateOrCreateAdmin("pavanpolamuri@gmail.com", "123456");
         updateOrCreateAdmin("pavavpolamuri@gmail.com", "123456");
         updateOrCreateAdmin("pavanvpolamuri@gmail.com", "123456");
