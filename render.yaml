@@ -1,0 +1,39 @@
+services:
+  # Backend Web Service (Spring Boot via Docker)
+  - type: web
+    name: proctorai-backend
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        sync: false
+
+  # Frontend Static Site (Vite + React)
+  - type: web
+    name: proctorai-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: proctorai-backend
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: VITE_WS_URL
+        fromService:
+          type: web
+          name: proctorai-backend
+          envVarKey: RENDER_EXTERNAL_URL
+
+
