@@ -11,7 +11,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_URL
-        sync: false
+        value: "https://proctorai-frontend-chi.vercel.app"
 
   # Frontend Static Site (Vite + React)
   - type: web
