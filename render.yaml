@@ -1,4 +1,4 @@
-services:
+ services:
   # Backend Web Service (Spring Boot via Docker)
   - type: web
     name: proctorai-backend
@@ -35,5 +35,3 @@ services:
           type: web
           name: proctorai-backend
           envVarKey: RENDER_EXTERNAL_URL
-
-
