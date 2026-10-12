@@ -45,7 +45,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 // Layout component with Navbar and Sidebar
 const MainLayout = ({ children }) => {
   return (
-    <div className="min-h-screen bg-[#F7F8FC] flex flex-col font-sans text-[#111827]">
+    <div className="min-h-screen bg-bg-dark flex flex-col font-sans text-gray-200">
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
@@ -60,7 +60,7 @@ const MainLayout = ({ children }) => {
 // Full screen layout for exams
 const ExamLayout = ({ children }) => {
   return (
-    <div className="min-h-screen bg-[#F7F8FC] font-sans text-[#111827]">
+    <div className="min-h-screen bg-bg-dark font-sans text-gray-200">
       {children}
     </div>
   );

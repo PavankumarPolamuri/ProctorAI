@@ -33,68 +33,70 @@ const StudentDashboard = () => {
     }
   };
 
-  if (loading) return <div className="text-center p-8 text-[#64748B]">Loading exams...</div>;
-  if (error) return <div className="text-red-500 text-center p-8 font-medium">{error}</div>;
+  if (loading) return <div className="text-center p-8 text-[#94A3B8]">Loading exams...</div>;
+  if (error) return <div className="text-red-400 text-center p-8 font-medium">{error}</div>;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-extrabold text-[#111827] tracking-tight">Available Exams</h1>
+        <h1 className="text-2xl font-extrabold text-[#F8FAFC] tracking-tight">Available Exams</h1>
       </div>
       
       {exams.length === 0 ? (
-        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-12 text-center text-[#64748B] shadow-card">
-          <div className="bg-[#EDE9FE] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <BookOpen className="w-8 h-8 text-[#7C3AED]" />
+        <div className="bg-[#111936] border border-[#27325A] rounded-2xl p-12 text-center text-[#94A3B8]">
+          <div className="bg-[#151B3D] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#27325A]">
+            <BookOpen className="w-8 h-8 text-[#A855F7]" />
           </div>
-          <h3 className="text-xl font-bold text-[#111827] mb-2">No Exams Available</h3>
+          <h3 className="text-xl font-bold text-[#F8FAFC] mb-2">No Exams Available</h3>
           <p>Check back later or contact your administrator.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {exams.map((exam) => (
-            <div key={exam.id} className="bg-white border border-[#E5E7EB] hover:border-[#C4B5FD] rounded-2xl overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-card-hover shadow-card">
-              <div className="p-6 flex-1">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 bg-[#EDE9FE] text-[#7C3AED] rounded-lg">
-                    {exam.subject}
-                  </span>
-                  <span className="flex items-center text-xs font-medium text-[#64748B] bg-[#F7F8FC] border border-[#E5E7EB] px-2.5 py-1 rounded-md">
-                    <Clock className="w-3.5 h-3.5 mr-1.5 text-[#7C3AED]" />
-                    {exam.durationMinutes} mins
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-[#111827] mb-2 tracking-tight group-hover:text-[#7C3AED] transition-colors">{exam.title}</h3>
-                <p className="text-sm text-[#64748B] mb-6 line-clamp-2 leading-relaxed">{exam.description}</p>
-                
-                <div className="space-y-3 text-sm text-[#64748B] font-medium bg-[#F7F8FC] p-4 rounded-xl border border-[#E5E7EB]">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <FileText className="w-4 h-4 mr-2 text-[#7C3AED]" />
-                      Total Marks
-                    </div>
-                    <span className="text-[#111827] font-bold">{exam.totalMarks}</span>
+            <div key={exam.id} className="bg-[#111936] border border-[#27325A] hover:border-[#8B5CF6]/50 rounded-2xl overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-[0_10px_30px_rgba(124,58,237,0.2)]">
+              <div className="p-6 flex-1 relative overflow-hidden">
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 bg-[#7C3AED]/20 text-[#A855F7] rounded-lg border border-[#8B5CF6]/30 shadow-sm">
+                      {exam.subject}
+                    </span>
+                    <span className="flex items-center text-xs font-medium text-[#CBD5E1] bg-[#151B3D] border border-[#27325A] px-2.5 py-1 rounded-md">
+                      <Clock className="w-3.5 h-3.5 mr-1.5 text-[#8B5CF6]" />
+                      {exam.durationMinutes} mins
+                    </span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <XCircle className="w-4 h-4 mr-2 text-red-400" />
-                      Negative Marks
+                  <h3 className="text-xl font-bold text-[#F8FAFC] mb-2 tracking-tight group-hover:text-[#C084FC] transition-colors">{exam.title}</h3>
+                  <p className="text-sm text-[#94A3B8] mb-6 line-clamp-2 leading-relaxed">{exam.description}</p>
+                  
+                  <div className="space-y-3 text-sm text-[#CBD5E1] font-medium bg-[#151B3D] p-4 rounded-xl border border-[#27325A]">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center text-[#CBD5E1]">
+                        <FileText className="w-4 h-4 mr-2 text-[#A855F7]" />
+                        Total Marks
+                      </div>
+                      <span className="text-[#F8FAFC] font-bold">{exam.totalMarks}</span>
                     </div>
-                    <span className="text-[#111827] font-bold">{exam.negativeMarks}</span>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center text-[#CBD5E1]">
+                        <XCircle className="w-4 h-4 mr-2 text-red-400" />
+                        Negative Marks
+                      </div>
+                      <span className="text-[#F8FAFC] font-bold">{exam.negativeMarks}</span>
+                    </div>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-[#F7F8FC] p-5 border-t border-[#E5E7EB]">
+              <div className="bg-[#151B3D]/80 p-5 border-t border-[#27325A] relative z-10">
                 <button
                   onClick={() => handleStartExam(exam.id)}
-                  className="w-full flex items-center justify-center py-3 px-4 rounded-xl shadow-purple-glow text-sm font-bold text-white bg-gradient-to-r from-[#7C3AED] to-[#6D28D9] hover:from-[#6D28D9] hover:to-[#5B21B6] focus:outline-none transition-all hover:-translate-y-0.5"
+                  className="w-full flex items-center justify-center py-3 px-4 rounded-xl shadow-[0_0_20px_rgba(124,58,237,0.4)] text-sm font-bold text-[#F8FAFC] bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:from-[#8B5CF6] hover:to-[#C084FC] focus:outline-none transition-all hover:-translate-y-0.5"
                 >
                   <PlayCircle className="w-4 h-4 mr-2" />
                   START EXAM
                 </button>
-                <p className="text-[11px] text-center text-[#9CA3AF] mt-3 font-medium flex items-center justify-center">
-                  <CheckCircle className="w-3 h-3 mr-1 text-[#7C3AED]" />
+                <p className="text-[11px] text-center text-[#94A3B8] mt-3 font-medium flex items-center justify-center">
+                  <CheckCircle className="w-3 h-3 mr-1 text-[#A855F7]" />
                   Secure proctoring will activate
                 </p>
               </div>

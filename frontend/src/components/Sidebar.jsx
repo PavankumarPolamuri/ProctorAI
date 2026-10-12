@@ -9,9 +9,7 @@ import {
   ShieldAlert, 
   Clock, 
   CheckCircle2, 
-  UserCheck,
-  Shield,
-  Check
+  UserCheck
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -27,22 +25,22 @@ const Sidebar = () => {
 
   const studentLinks = [
     { to: '/student/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { to: '/student/exams', label: 'My Exams', icon: Clock },
-    { to: '/student/results', label: 'Results', icon: CheckCircle2 },
+    { to: '/student/exams', label: 'Available Exams', icon: Clock },
+    { to: '/student/results', label: 'My Exam Results', icon: CheckCircle2 },
   ];
 
   const links = isAdmin ? adminLinks : studentLinks;
 
   return (
-    <aside className="w-64 bg-white border-r border-[#E5E7EB] p-4 min-h-[calc(100vh-4rem)] flex flex-col justify-between z-30 relative">
+    <aside className="w-64 bg-[#0B1026] border-r border-[#27325A] p-4 min-h-[calc(100vh-4rem)] flex flex-col justify-between z-30 relative">
       <div className="space-y-6">
         <div className="px-3 py-2">
-          <p className="text-xs font-bold text-[#7C3AED] tracking-wider uppercase">
+          <p className="text-xs font-semibold text-[#A855F7] tracking-wider uppercase">
             {isAdmin ? 'Administration' : 'Student Portal'}
           </p>
         </div>
 
-        <nav className="space-y-1">
+        <nav className="space-y-1.5">
           {links.map((item) => {
             const Icon = item.icon;
             return (
@@ -53,17 +51,17 @@ const Sidebar = () => {
                 className={({ isActive }) =>
                   `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     isActive
-                      ? 'bg-[#EDE9FE] text-[#7C3AED] font-semibold shadow-sm'
-                      : 'text-[#64748B] hover:text-[#111827] hover:bg-[#F7F8FC]'
+                      ? 'bg-gradient-to-r from-[#7C3AED]/25 to-[#8B5CF6]/20 text-[#FFFFFF] border border-[#8B5CF6]/40 shadow-[0_0_15px_rgba(139,92,246,0.3)]'
+                      : 'text-[#CBD5E1] hover:text-[#FFFFFF] hover:bg-[#151B3D] border border-transparent'
                   }`
                 }
               >
                 <div className="flex items-center gap-3">
-                  <Icon className="w-[18px] h-[18px]" />
+                  <Icon className="w-4 h-4 text-[#A855F7]" />
                   <span>{item.label}</span>
                 </div>
                 {item.badge && (
-                  <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-red-50 text-red-500 border border-red-100 animate-pulse">
+                  <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-red-500/15 text-red-400 border border-red-500/30 animate-pulse">
                     {item.badge}
                   </span>
                 )}
@@ -74,13 +72,13 @@ const Sidebar = () => {
       </div>
 
       {/* Security Status Footnote */}
-      <div className="p-3.5 rounded-xl bg-[#F7F8FC] border border-[#E5E7EB] text-xs text-[#64748B] space-y-1">
-        <div className="flex items-center gap-2 text-[#7C3AED] font-semibold">
-          <UserCheck className="w-3.5 h-3.5" />
-          <span>AI Proctoring Active</span>
+      <div className="p-3.5 rounded-xl bg-[#111936] border border-[#27325A] text-xs text-[#CBD5E1] space-y-1">
+        <div className="flex items-center gap-2 text-[#A855F7] font-semibold">
+          <UserCheck className="w-3.5 h-3.5 text-[#8B5CF6]" />
+          <span>Anti-Malpractice Active</span>
         </div>
-        <p className="text-[11px] text-[#9CA3AF] leading-tight">
-          Session secured with AI monitoring & integrity enforcement.
+        <p className="text-[11px] text-[#94A3B8] leading-tight">
+          Session protected by STOMP over WS, full-screen lock enforcement & AI monitoring.
         </p>
       </div>
     </aside>
