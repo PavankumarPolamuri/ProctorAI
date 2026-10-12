@@ -18,6 +18,9 @@ import AuditLogs from './pages/admin/AuditLogs';
 import Register from './pages/Register';
 import Landing from './pages/Landing';
 import Splash from './pages/Splash';
+import PracticeExamList from './pages/practice/PracticeExamList';
+import PracticeExamAttempt from './pages/practice/PracticeExamAttempt';
+import PracticeExamResult from './pages/practice/PracticeExamResult';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -187,6 +190,11 @@ function App() {
             </MainLayout>
           </ProtectedRoute>
         } />
+
+        {/* Public Practice Exam Routes (no auth required) */}
+        <Route path="/practice" element={<PracticeExamList />} />
+        <Route path="/practice/result" element={<PracticeExamResult />} />
+        <Route path="/practice/:examId" element={<PracticeExamAttempt />} />
 
         {/* Fallback */}
         <Route path="/" element={<Landing />} />

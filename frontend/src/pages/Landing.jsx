@@ -471,6 +471,49 @@ const Landing = () => {
       </section>
 
       {/* ═══════════════════════════════════════════ */}
+      {/* EXPERIENCE PROCTORAI — Practice Exams      */}
+      {/* ═══════════════════════════════════════════ */}
+      <section id="practice" className="relative z-10 max-w-7xl mx-auto px-6 pb-20 lg:pb-28">
+        <div className="bg-[#0B1026]/80 backdrop-blur-md border border-[rgba(139,92,246,0.25)] rounded-2xl p-8 sm:p-12 text-center relative overflow-hidden">
+          {/* Subtle glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] bg-[#7C3AED]/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+          <div className="relative z-10">
+            <p className="text-xs font-bold tracking-[0.2em] text-[#8B5CF6] uppercase mb-3">Try It Free</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#F8FAFC] tracking-tight mb-3">
+              Experience{' '}
+              <span className="bg-gradient-to-r from-[#8B5CF6] to-[#E879F9] bg-clip-text text-transparent">PROCTOR AI</span>
+            </h2>
+            <p className="text-sm sm:text-base text-[#94A3B8] max-w-md mx-auto leading-relaxed mb-8">
+              Explore our examination platform with free practice tests. No account or registration required.
+            </p>
+
+            {/* Mini exam cards */}
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
+              {[
+                { icon: '☕', label: 'Java Basics' },
+                { icon: '🧮', label: 'DSA' },
+                { icon: '💻', label: 'Computer Science' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-2 px-4 py-2 bg-[#151B3D] border border-[#27325A] rounded-xl text-sm text-[#CBD5E1] font-medium">
+                  <span>{item.icon}</span>
+                  {item.label}
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => navigate('/practice')}
+              className="inline-flex items-center justify-center px-8 py-3.5 text-base font-extrabold text-white bg-gradient-to-r from-[#7C3AED] via-[#8B5CF6] to-[#A855F7] rounded-xl shadow-[0_0_35px_rgba(124,58,237,0.45)] hover:shadow-[0_0_50px_rgba(139,92,246,0.65)] hover:-translate-y-0.5 transition-all duration-300"
+            >
+              Try a Free Practice Exam
+              <ChevronRight className="w-5 h-5 ml-2" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════ */}
       {/* FOOTER                                     */}
       {/* ═══════════════════════════════════════════ */}
       <footer className="relative z-10 border-t border-[#8B5CF6]/20 bg-[#030712] py-8">
