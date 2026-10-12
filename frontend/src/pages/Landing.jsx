@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Shield, 
@@ -32,7 +32,8 @@ const Landing = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [videoError, setVideoError] = useState(false);
-  const demoVideoRef = useRef(null);
+  const DEMO_VIDEO_URL = 'https://drive.google.com/file/d/1LrvlvW8MUo_O7vfb1TdD8Bz9Naqu5_5e/preview';
+  const [iframeSrc, setIframeSrc] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,14 +58,12 @@ const Landing = () => {
 
   const openDemoModal = useCallback(() => {
     setVideoError(false);
+    setIframeSrc(DEMO_VIDEO_URL);
     setShowDemoModal(true);
   }, []);
 
   const closeDemoModal = useCallback(() => {
-    if (demoVideoRef.current) {
-      demoVideoRef.current.pause();
-      demoVideoRef.current.currentTime = 0;
-    }
+    setIframeSrc('');
     setShowDemoModal(false);
   }, []);
 
@@ -515,36 +514,37 @@ const Landing = () => {
               </button>
             </div>
 
-            {/* Video player */}
+            {/* Video player — Google Drive embed */}
             <div className="relative bg-black aspect-video">
               {!videoError ? (
-                <video
-                  ref={demoVideoRef}
+                <iframe
+                  src={iframeSrc}
                   className="w-full h-full"
-                  controls
-                  controlsList="nodownload"
-                  playsInline
-                  preload="metadata"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                  title="ProctorAI Platform Demo"
+                  style={{ border: 'none' }}
                   onError={() => setVideoError(true)}
-                >
-                  <source src="/videos/proctorai-demo.mp4" type="video/mp4" />
-                  <source src="/videos/proctorai-demo.webm" type="video/webm" />
-                </video>
+                />
               ) : (
-                /* Fallback when video file is not yet available */
+                /* Fallback when Google Drive video is unavailable */
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
                   <div className="w-20 h-20 rounded-2xl bg-[#151B3D] border border-[#8B5CF6]/30 flex items-center justify-center mb-6">
                     <Play className="w-8 h-8 text-[#8B5CF6]" />
                   </div>
-                  <h4 className="text-xl font-bold text-[#F8FAFC] mb-3">Demo Video Coming Soon</h4>
+                  <h4 className="text-xl font-bold text-[#F8FAFC] mb-3">Video Unavailable</h4>
                   <p className="text-sm text-[#94A3B8] max-w-md leading-relaxed mb-4">
-                    The walkthrough video showcasing ProctorAI's landing page, portal selection, student dashboard, examination workflow, and administrator monitoring is being prepared.
+                    The demo video could not be loaded. This may happen if Google Drive is blocking playback or the file is not shared publicly.
                   </p>
-                  <div className="bg-[#0B1026] border border-[#8B5CF6]/30 rounded-xl px-4 py-3">
-                    <p className="text-xs text-[#64748B] font-mono">
-                      Expected path: <span className="text-[#C084FC]">public/videos/proctorai-demo.mp4</span>
-                    </p>
-                  </div>
+                  <a
+                    href="https://drive.google.com/file/d/1LrvlvW8MUo_O7vfb1TdD8Bz9Naqu5_5e/view?usp=sharing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-[#7C3AED] to-[#A855F7] rounded-xl hover:shadow-[0_0_25px_rgba(124,58,237,0.45)] transition-all"
+                  >
+                    <Play className="w-4 h-4" />
+                    Watch on Google Drive
+                  </a>
                 </div>
               )}
             </div>
