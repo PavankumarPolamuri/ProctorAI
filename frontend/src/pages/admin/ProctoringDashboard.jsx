@@ -94,24 +94,24 @@ const ProctoringDashboard = () => {
   const getEventIcon = (type) => {
     switch (type) {
       case 'TAB_SWITCH': return <AlertTriangle className="w-4 h-4 text-amber-400" />;
-      case 'EXIT_FULLSCREEN': return <Activity className="w-4 h-4 text-[#A855F7]" />;
+      case 'EXIT_FULLSCREEN': return <Activity className="w-4 h-4 text-[#6D28D9]" />;
       case 'CAMERA_DISABLED': return <Video className="w-4 h-4 text-red-400" />;
-      default: return <ShieldAlert className="w-4 h-4 text-[#8B5CF6]" />;
+      default: return <ShieldAlert className="w-4 h-4 text-[#7C3AED]" />;
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-[#94A3B8]">Connecting to Live Proctoring Server...</div>;
+  if (loading) return <div className="p-8 text-center text-[#9CA3AF]">Connecting to Live Proctoring Server...</div>;
 
   return (
     <div className="h-full flex flex-col space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <button onClick={() => navigate('/admin/dashboard')} className="mr-4 text-[#94A3B8] hover:text-[#F8FAFC] p-2 bg-[#111936] rounded-xl border border-[#27325A] transition-colors">
-            <ArrowLeft className="w-5 h-5 text-[#8B5CF6]" />
+          <button onClick={() => navigate('/admin/dashboard')} className="mr-4 text-[#9CA3AF] hover:text-[#111827] p-2 bg-[#FFFFFF] rounded-xl border border-[#E5E7EB] transition-colors">
+            <ArrowLeft className="w-5 h-5 text-[#7C3AED]" />
           </button>
           <div>
-            <h1 className="text-2xl font-extrabold text-[#F8FAFC] tracking-tight">Live Proctoring Center</h1>
-            <p className="text-xs text-[#94A3B8] flex items-center mt-1">
+            <h1 className="text-2xl font-extrabold text-[#111827] tracking-tight">Live Proctoring Center</h1>
+            <p className="text-xs text-[#9CA3AF] flex items-center mt-1">
               <span className="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
               WebSocket Feed Active — Exam ID: {examId}
             </p>
@@ -121,38 +121,38 @@ const ProctoringDashboard = () => {
 
       <div className="flex flex-1 gap-6 overflow-hidden min-h-[500px]">
         {/* Active Students Grid */}
-        <div className="flex-1 bg-[#111936] border border-[#27325A] rounded-2xl flex flex-col overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.4)]">
-          <div className="px-6 py-4 border-b border-[#27325A] flex justify-between items-center bg-[#151B3D]">
-            <h2 className="text-base font-bold text-[#F8FAFC] flex items-center">
-              <Users className="w-5 h-5 mr-2 text-[#8B5CF6]" />
+        <div className="flex-1 bg-[#FFFFFF] border border-[#E5E7EB] rounded-2xl flex flex-col overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.4)]">
+          <div className="px-6 py-4 border-b border-[#E5E7EB] flex justify-between items-center bg-[#F7F8FC]">
+            <h2 className="text-base font-bold text-[#111827] flex items-center">
+              <Users className="w-5 h-5 mr-2 text-[#7C3AED]" />
               Active Candidates ({activeStudents.length})
             </h2>
           </div>
-          <div className="p-6 overflow-y-auto flex-1 bg-[#0B1026]">
+          <div className="p-6 overflow-y-auto flex-1 bg-[#F7F8FC]">
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {activeStudents.map(student => {
                 const feed = videoFeeds[student.id];
                 return (
-                <div key={student.id} className={`bg-[#111936] border p-4 rounded-2xl ${student.riskLevel === 'HIGH' ? 'border-red-500/50 ring-1 ring-red-500/50' : 'border-[#27325A]'}`}>
+                <div key={student.id} className={`bg-[#FFFFFF] border p-4 rounded-2xl ${student.riskLevel === 'HIGH' ? 'border-red-500/50 ring-1 ring-red-500/50' : 'border-[#E5E7EB]'}`}>
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-sm font-bold text-[#F8FAFC]">{student.studentName}</h3>
-                      <p className="text-xs text-[#94A3B8]">{student.studentEmail}</p>
+                      <h3 className="text-sm font-bold text-[#111827]">{student.studentName}</h3>
+                      <p className="text-xs text-[#9CA3AF]">{student.studentEmail}</p>
                     </div>
                     <span className={`px-2.5 py-0.5 text-[10px] font-extrabold rounded-full border ${getRiskColor(student.riskLevel)}`}>
                       {student.riskLevel} RISK
                     </span>
                   </div>
                   
-                  <div className="aspect-video bg-[#050816] rounded-xl mb-4 relative overflow-hidden flex items-center justify-center border border-[#27325A]">
+                  <div className="aspect-video bg-[#F7F8FC] rounded-xl mb-4 relative overflow-hidden flex items-center justify-center border border-[#E5E7EB]">
                     {!feed && (
-                      <div className="text-[#94A3B8] text-xs flex flex-col items-center">
-                        <Video className="w-8 h-8 mb-2 opacity-30 animate-pulse text-[#8B5CF6]" />
+                      <div className="text-[#9CA3AF] text-xs flex flex-col items-center">
+                        <Video className="w-8 h-8 mb-2 opacity-30 animate-pulse text-[#7C3AED]" />
                         Waiting for Student...
                       </div>
                     )}
                     {feed && feed.status === 'DISCONNECTED' && (
-                      <div className="text-[#94A3B8] text-xs flex flex-col items-center">
+                      <div className="text-[#9CA3AF] text-xs flex flex-col items-center">
                         <Video className="w-8 h-8 mb-2 opacity-50" />
                         Webcam Disconnected
                       </div>
@@ -169,8 +169,8 @@ const ProctoringDashboard = () => {
                   </div>
 
                   <div className="flex justify-between items-center text-xs">
-                    <span className="text-[#94A3B8] font-medium">Violations:</span>
-                    <span className={`font-bold ${student.violationCount > 0 ? 'text-red-400' : 'text-[#F8FAFC]'}`}>
+                    <span className="text-[#9CA3AF] font-medium">Violations:</span>
+                    <span className={`font-bold ${student.violationCount > 0 ? 'text-red-400' : 'text-[#111827]'}`}>
                       {student.violationCount} / {student.maxViolations}
                     </span>
                   </div>
@@ -179,7 +179,7 @@ const ProctoringDashboard = () => {
               })}
               
               {activeStudents.length === 0 && (
-                <div className="col-span-full py-12 text-center text-[#94A3B8] font-medium">
+                <div className="col-span-full py-12 text-center text-[#9CA3AF] font-medium">
                   No students are currently taking this exam.
                 </div>
               )}
@@ -188,33 +188,33 @@ const ProctoringDashboard = () => {
         </div>
 
         {/* Real-time Alerts Panel */}
-        <div className="w-96 bg-[#111936] border border-[#27325A] rounded-2xl flex flex-col overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.4)]">
-          <div className="px-6 py-4 border-b border-[#27325A] bg-[#151B3D]">
-            <h2 className="text-base font-bold text-[#F8FAFC] flex items-center">
-              <ShieldAlert className="w-5 h-5 mr-2 text-[#A855F7]" />
+        <div className="w-96 bg-[#FFFFFF] border border-[#E5E7EB] rounded-2xl flex flex-col overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.4)]">
+          <div className="px-6 py-4 border-b border-[#E5E7EB] bg-[#F7F8FC]">
+            <h2 className="text-base font-bold text-[#111827] flex items-center">
+              <ShieldAlert className="w-5 h-5 mr-2 text-[#6D28D9]" />
               Live Security Alerts
             </h2>
           </div>
-          <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#0B1026]">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#F7F8FC]">
             {malpracticeEvents.length === 0 ? (
-              <div className="text-center py-12 text-xs text-[#94A3B8]">
+              <div className="text-center py-12 text-xs text-[#9CA3AF]">
                 Listening for proctoring events...<br/>No malpractice detected yet.
               </div>
             ) : (
               malpracticeEvents.map((event, idx) => (
-                <div key={idx} className={`p-3.5 rounded-xl border text-xs ${event.severity === 'HIGH' ? 'bg-red-500/10 border-red-500/25' : event.severity === 'MEDIUM' ? 'bg-amber-500/10 border-amber-500/25' : 'bg-[#151B3D] border-[#27325A]'}`}>
+                <div key={idx} className={`p-3.5 rounded-xl border text-xs ${event.severity === 'HIGH' ? 'bg-red-500/10 border-red-500/25' : event.severity === 'MEDIUM' ? 'bg-amber-500/10 border-amber-500/25' : 'bg-[#F7F8FC] border-[#E5E7EB]'}`}>
                   <div className="flex justify-between items-start mb-1">
-                    <span className="font-bold text-[#F8FAFC] flex items-center">
+                    <span className="font-bold text-[#111827] flex items-center">
                       {getEventIcon(event.eventType)}
                       <span className="ml-1.5">{event.studentName}</span>
                     </span>
-                    <span className="text-[10px] text-[#94A3B8]">
+                    <span className="text-[10px] text-[#9CA3AF]">
                       {new Date(event.timestamp).toLocaleTimeString()}
                     </span>
                   </div>
-                  <p className="text-[#CBD5E1] mt-1 text-xs leading-relaxed">{event.description}</p>
+                  <p className="text-[#64748B] mt-1 text-xs leading-relaxed">{event.description}</p>
                   <div className="mt-2 flex justify-between items-center text-[10px]">
-                    <span className="font-bold text-[#A855F7] bg-[#050816] px-2 py-0.5 rounded-lg border border-[#27325A]">
+                    <span className="font-bold text-[#6D28D9] bg-[#F7F8FC] px-2 py-0.5 rounded-lg border border-[#E5E7EB]">
                       {event.eventType}
                     </span>
                     <span className={`font-bold ${event.severity === 'HIGH' ? 'text-red-400' : event.severity === 'MEDIUM' ? 'text-amber-400' : 'text-emerald-400'}`}>

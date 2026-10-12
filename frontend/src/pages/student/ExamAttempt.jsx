@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 import websocketService from '../../services/websocketService';
-import { Clock, AlertTriangle, CheckCircle, ChevronLeft, ChevronRight, Send, HelpCircle } from 'lucide-react';
+import { Clock, AlertTriangle, CheckCircle, ChevronLeft, ChevronRight, Send, HelpCircle, Shield } from 'lucide-react';
 
 const ExamAttempt = () => {
   const { attemptId } = useParams();
@@ -236,10 +236,7 @@ const ExamAttempt = () => {
       }
     };
 
-    const handleContextMenu = (e) => {
-      e.preventDefault();
-    };
-
+    const handleContextMenu = (e) => { e.preventDefault(); };
     const handleCopy = (e) => {
       e.preventDefault();
       reportMalpractice('COPY_ATTEMPT', 'LOW', 'Student attempted to copy content');
@@ -351,23 +348,25 @@ const ExamAttempt = () => {
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  if (loading) return <div className="flex h-screen items-center justify-center bg-[#050816] text-[#CBD5E1]">Loading Exam Environment...</div>;
-  if (error) return <div className="flex h-screen items-center justify-center bg-[#050816] text-red-400 font-medium">{error}</div>;
+  if (loading) return <div className="flex h-screen items-center justify-center bg-[#F7F8FC] text-[#64748B]">Loading Exam Environment...</div>;
+  if (error) return <div className="flex h-screen items-center justify-center bg-[#F7F8FC] text-red-500 font-medium">{error}</div>;
 
   if (!isFullscreen) {
     return (
-      <div className="flex flex-col h-screen items-center justify-center bg-[#050816] p-6 text-center">
-        <AlertTriangle className="w-16 h-16 text-[#A855F7] mb-4 animate-pulse" />
-        <h2 className="text-2xl font-bold text-[#F8FAFC] mb-2">Fullscreen Mode Required</h2>
-        <p className="text-[#94A3B8] mb-6 max-w-md">
-          This exam requires full-screen mode to enforce AI proctoring and security integrity. Click below to enter full-screen.
-        </p>
-        <button
-          onClick={requestFullscreen}
-          className="px-6 py-3.5 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:from-[#8B5CF6] hover:to-[#C084FC] text-[#F8FAFC] rounded-xl font-bold shadow-[0_0_25px_rgba(124,58,237,0.4)] transition-all"
-        >
-          Enter Fullscreen & Resume Exam
-        </button>
+      <div className="flex flex-col h-screen items-center justify-center bg-[#F7F8FC] p-6 text-center">
+        <div className="bg-white rounded-2xl border border-[#E5E7EB] shadow-card-lg p-10 max-w-md">
+          <AlertTriangle className="w-16 h-16 text-[#7C3AED] mb-4 animate-pulse mx-auto" />
+          <h2 className="text-2xl font-bold text-[#111827] mb-2">Fullscreen Mode Required</h2>
+          <p className="text-[#64748B] mb-6 text-sm">
+            This exam requires full-screen mode to enforce AI proctoring and security integrity. Click below to enter full-screen.
+          </p>
+          <button
+            onClick={requestFullscreen}
+            className="px-6 py-3.5 bg-gradient-to-r from-[#7C3AED] to-[#6D28D9] text-white rounded-xl font-bold shadow-purple-glow transition-all hover:-translate-y-0.5"
+          >
+            Enter Fullscreen & Resume Exam
+          </button>
+        </div>
         <video 
           ref={videoRef} 
           autoPlay 
@@ -382,21 +381,25 @@ const ExamAttempt = () => {
   const currentQ = questions[currentQuestionIndex];
 
   return (
-    <div className="flex flex-col h-screen bg-[#050816] text-[#F8FAFC] select-none">
+    <div className="flex flex-col h-screen bg-[#F7F8FC] text-[#111827] select-none">
       {/* Top Bar */}
-      <header className="bg-[#0B1026] border-b border-[#27325A] px-6 py-3 flex justify-between items-center z-10">
+      <header className="bg-white border-b border-[#E5E7EB] px-6 py-3 flex justify-between items-center z-10 shadow-sm">
         <div>
-          <h1 className="text-lg font-bold text-[#F8FAFC]">{attempt?.examTitle}</h1>
-          <p className="text-xs text-[#94A3B8]">{attempt?.studentName} ({attempt?.studentEmail})</p>
+          <h1 className="text-lg font-bold text-[#111827]">{attempt?.examTitle}</h1>
+          <p className="text-xs text-[#64748B]">{attempt?.studentName} ({attempt?.studentEmail})</p>
         </div>
         <div className="flex items-center space-x-6">
-          <div className="flex items-center space-x-2 text-lg font-mono font-extrabold text-[#E879F9] bg-[#151B3D] px-3.5 py-1.5 rounded-xl border border-[#8B5CF6]/30 shadow-[0_0_15px_rgba(139,92,246,0.2)]">
-            <Clock className="w-5 h-5 text-[#8B5CF6]" />
+          <div className={`flex items-center space-x-2 text-lg font-mono font-extrabold px-3.5 py-1.5 rounded-xl border ${
+            remainingTime <= 60 
+              ? 'text-red-600 bg-red-50 border-red-200 animate-pulse' 
+              : 'text-[#7C3AED] bg-[#EDE9FE] border-[#DDD6FE]'
+          }`}>
+            <Clock className="w-5 h-5" />
             <span>{formatTime(remainingTime)}</span>
           </div>
           <button
             onClick={handleSubmitExam}
-            className="px-4 py-2 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:from-[#8B5CF6] hover:to-[#C084FC] text-[#F8FAFC] text-sm font-bold rounded-xl shadow-[0_0_15px_rgba(124,58,237,0.4)] flex items-center transition-all"
+            className="px-4 py-2 bg-gradient-to-r from-[#7C3AED] to-[#6D28D9] text-white text-sm font-bold rounded-xl shadow-purple-glow flex items-center transition-all hover:-translate-y-0.5"
           >
             <Send className="w-4 h-4 mr-2" />
             Submit Exam
@@ -405,10 +408,10 @@ const ExamAttempt = () => {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Left Panel: Camera & Navigation Grid */}
-        <aside className="w-64 bg-[#0B1026] border-r border-[#27325A] flex flex-col">
-          <div className="p-4 border-b border-[#27325A]">
-            <div className="bg-[#050816] w-full aspect-video rounded-xl overflow-hidden flex items-center justify-center relative border border-[#27325A]">
+        {/* Left Panel */}
+        <aside className="w-64 bg-white border-r border-[#E5E7EB] flex flex-col">
+          <div className="p-4 border-b border-[#E5E7EB]">
+            <div className="bg-[#F7F8FC] w-full aspect-video rounded-xl overflow-hidden flex items-center justify-center relative border border-[#E5E7EB]">
               <video 
                 ref={videoRef} 
                 autoPlay 
@@ -417,36 +420,36 @@ const ExamAttempt = () => {
                 className="w-full h-full object-cover transform -scale-x-100" 
               />
               {!cameraStream && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white bg-[#050816]">
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-[#64748B] bg-[#F7F8FC]">
                   <AlertTriangle className="w-6 h-6 mb-1 text-red-400" />
-                  <span className="text-xs text-[#94A3B8]">Camera Required</span>
+                  <span className="text-xs">Camera Required</span>
                 </div>
               )}
             </div>
-            <div className="mt-2 text-[11px] text-center text-[#A855F7] font-semibold flex items-center justify-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#8B5CF6] animate-ping"></span>
+            <div className="mt-2 text-[11px] text-center text-[#7C3AED] font-semibold flex items-center justify-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#7C3AED] animate-ping"></span>
               AI Proctoring Active
             </div>
           </div>
           
           <div className="flex-1 overflow-y-auto p-4">
-            <h3 className="text-xs font-bold text-[#CBD5E1] uppercase tracking-wider mb-3">Questions Overview</h3>
+            <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-3">Questions Overview</h3>
             <div className="grid grid-cols-4 gap-2">
               {questions.map((q, idx) => {
                 let btnClass = "w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold border transition-all cursor-pointer ";
                 
                 if (idx === currentQuestionIndex) {
-                  btnClass += "ring-2 ring-[#8B5CF6] border-transparent ";
+                  btnClass += "ring-2 ring-[#7C3AED] border-transparent ";
                 } else {
-                  btnClass += "border-[#27325A] hover:bg-[#151B3D] ";
+                  btnClass += "border-[#E5E7EB] hover:bg-[#F7F8FC] ";
                 }
 
                 if (markedForReview[q.id]) {
-                  btnClass += "bg-[#E879F9]/20 text-[#E879F9] border-[#E879F9]/40";
+                  btnClass += "bg-amber-50 text-amber-600 border-amber-200";
                 } else if (answers[q.id]) {
-                  btnClass += "bg-[#7C3AED]/25 text-[#A855F7] border-[#8B5CF6]/50";
+                  btnClass += "bg-[#EDE9FE] text-[#7C3AED] border-[#DDD6FE]";
                 } else {
-                  btnClass += "bg-[#0B1026] text-[#CBD5E1]";
+                  btnClass += "bg-white text-[#64748B]";
                 }
 
                 return (
@@ -461,24 +464,24 @@ const ExamAttempt = () => {
               })}
             </div>
             
-            <div className="mt-6 space-y-2 text-xs text-[#94A3B8]">
-              <div className="flex items-center"><div className="w-3 h-3 rounded-md bg-[#7C3AED]/30 border border-[#8B5CF6] mr-2"></div> Answered</div>
-              <div className="flex items-center"><div className="w-3 h-3 rounded-md bg-[#E879F9]/30 border border-[#E879F9] mr-2"></div> Marked for Review</div>
-              <div className="flex items-center"><div className="w-3 h-3 rounded-md bg-[#0B1026] border border-[#27325A] mr-2"></div> Not Answered</div>
+            <div className="mt-6 space-y-2 text-xs text-[#64748B]">
+              <div className="flex items-center"><div className="w-3 h-3 rounded-md bg-[#EDE9FE] border border-[#DDD6FE] mr-2"></div> Answered</div>
+              <div className="flex items-center"><div className="w-3 h-3 rounded-md bg-amber-50 border border-amber-200 mr-2"></div> Marked for Review</div>
+              <div className="flex items-center"><div className="w-3 h-3 rounded-md bg-white border border-[#E5E7EB] mr-2"></div> Not Answered</div>
             </div>
           </div>
         </aside>
 
-        {/* Main Content: Question */}
+        {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-8 relative">
           {currentQ && (
-            <div className="max-w-4xl mx-auto bg-[#111936] rounded-2xl border border-[#27325A] shadow-[0_10px_40px_rgba(0,0,0,0.5)] p-8">
-              <div className="flex justify-between items-center mb-6 border-b border-[#27325A] pb-4">
-                <h2 className="text-xl font-extrabold text-[#F8FAFC]">Question {currentQuestionIndex + 1}</h2>
-                <div className="text-xs font-bold text-[#A855F7] bg-[#151B3D] border border-[#27325A] px-3 py-1 rounded-lg">Marks: {currentQ.marks}</div>
+            <div className="max-w-4xl mx-auto bg-white rounded-2xl border border-[#E5E7EB] shadow-card p-8">
+              <div className="flex justify-between items-center mb-6 border-b border-[#E5E7EB] pb-4">
+                <h2 className="text-xl font-extrabold text-[#111827]">Question {currentQuestionIndex + 1}</h2>
+                <div className="text-xs font-bold text-[#7C3AED] bg-[#EDE9FE] px-3 py-1 rounded-lg">Marks: {currentQ.marks}</div>
               </div>
               
-              <div className="text-base md:text-lg text-[#F8FAFC] mb-8 whitespace-pre-wrap leading-relaxed font-medium">
+              <div className="text-base md:text-lg text-[#111827] mb-8 whitespace-pre-wrap leading-relaxed font-medium">
                 {currentQ.questionText}
               </div>
 
@@ -491,27 +494,27 @@ const ExamAttempt = () => {
                     onClick={() => handleAnswerSelect(currentQ.id, key)}
                     className={`p-4 border rounded-xl cursor-pointer transition-all flex items-center
                       ${answers[currentQ.id] === key 
-                        ? 'border-[#8B5CF6] bg-[#7C3AED]/20 shadow-[0_0_15px_rgba(139,92,246,0.2)]' 
-                        : 'border-[#27325A] bg-[#151B3D] hover:bg-[#182046]'}`}
+                        ? 'border-[#7C3AED] bg-[#EDE9FE] shadow-sm' 
+                        : 'border-[#E5E7EB] bg-white hover:bg-[#F7F8FC] hover:border-[#C4B5FD]'}`}
                   >
                     <div className={`w-6 h-6 rounded-full border flex items-center justify-center mr-4 transition-all
-                      ${answers[currentQ.id] === key ? 'border-[#8B5CF6] bg-[#8B5CF6] text-black font-bold' : 'border-[#27325A]'}`}>
-                      {answers[currentQ.id] === key && <CheckCircle className="w-4 h-4 text-[#050816]" />}
+                      ${answers[currentQ.id] === key ? 'border-[#7C3AED] bg-[#7C3AED] text-white' : 'border-[#D1D5DB]'}`}>
+                      {answers[currentQ.id] === key && <CheckCircle className="w-4 h-4" />}
                     </div>
-                    <span className="font-bold text-[#A855F7] mr-3">{key}.</span>
-                    <span className="text-[#F8FAFC] font-medium">{value}</span>
+                    <span className="font-bold text-[#7C3AED] mr-3">{key}.</span>
+                    <span className="text-[#111827] font-medium">{value}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-8 pt-6 border-t border-[#27325A] flex justify-between items-center flex-wrap gap-4">
+              <div className="mt-8 pt-6 border-t border-[#E5E7EB] flex justify-between items-center flex-wrap gap-4">
                 <div className="space-x-3">
                   <button
                     onClick={() => toggleReview(currentQ.id)}
                     className={`px-4 py-2 text-xs font-bold rounded-xl border ${
                       markedForReview[currentQ.id] 
-                        ? 'bg-[#E879F9]/20 text-[#E879F9] border-[#E879F9]/40' 
-                        : 'bg-[#151B3D] text-[#CBD5E1] border-[#27325A] hover:bg-[#182046]'
+                        ? 'bg-amber-50 text-amber-600 border-amber-200' 
+                        : 'bg-[#F7F8FC] text-[#64748B] border-[#E5E7EB] hover:bg-[#EDE9FE] hover:text-[#7C3AED]'
                     } flex items-center inline-flex transition-all`}
                   >
                     <HelpCircle className="w-4 h-4 mr-1.5" />
@@ -519,7 +522,7 @@ const ExamAttempt = () => {
                   </button>
                   <button
                     onClick={() => handleClearResponse(currentQ.id)}
-                    className="px-4 py-2 text-xs font-bold rounded-xl bg-[#151B3D] text-[#CBD5E1] border border-[#27325A] hover:bg-[#182046] transition-all"
+                    className="px-4 py-2 text-xs font-bold rounded-xl bg-[#F7F8FC] text-[#64748B] border border-[#E5E7EB] hover:bg-white transition-all"
                   >
                     Clear Response
                   </button>
@@ -529,7 +532,7 @@ const ExamAttempt = () => {
                   <button
                     onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
                     disabled={currentQuestionIndex === 0}
-                    className="px-4 py-2 bg-[#151B3D] border border-[#27325A] rounded-xl text-[#CBD5E1] hover:bg-[#182046] disabled:opacity-40 text-xs font-bold flex items-center transition-all"
+                    className="px-4 py-2 bg-white border border-[#E5E7EB] rounded-xl text-[#64748B] hover:bg-[#F7F8FC] disabled:opacity-40 text-xs font-bold flex items-center transition-all"
                   >
                     <ChevronLeft className="w-4 h-4 mr-1" />
                     Previous
@@ -537,9 +540,9 @@ const ExamAttempt = () => {
                   <button
                     onClick={() => setCurrentQuestionIndex(prev => Math.min(questions.length - 1, prev + 1))}
                     disabled={currentQuestionIndex === questions.length - 1}
-                    className="px-4 py-2 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] border border-transparent rounded-xl text-[#F8FAFC] hover:from-[#8B5CF6] hover:to-[#C084FC] disabled:opacity-40 text-xs font-bold flex items-center shadow-[0_0_15px_rgba(124,58,237,0.3)] transition-all"
+                    className="px-4 py-2 bg-gradient-to-r from-[#7C3AED] to-[#6D28D9] border border-transparent rounded-xl text-white disabled:opacity-40 text-xs font-bold flex items-center shadow-purple-glow transition-all"
                   >
-                    Next
+                    Save & Next
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </button>
                 </div>
@@ -550,10 +553,10 @@ const ExamAttempt = () => {
       </div>
 
       {showViolationWarning && (
-        <div className="fixed bottom-6 right-6 bg-[#0B1026] border border-red-500/50 rounded-xl shadow-2xl p-4 flex items-center z-50 animate-bounce max-w-sm">
-          <AlertTriangle className="w-5 h-5 text-red-400 mr-3 flex-shrink-0" />
-          <div className="text-xs text-[#CBD5E1] leading-snug">
-            <span className="text-red-400 font-bold">Warning:</span> Violation recorded. Remaining attempts: {violationCount}/{attempt?.maxViolations}.
+        <div className="fixed bottom-6 right-6 bg-white border border-red-200 rounded-xl shadow-card-lg p-4 flex items-center z-50 animate-bounce max-w-sm">
+          <AlertTriangle className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" />
+          <div className="text-xs text-[#64748B] leading-snug">
+            <span className="text-red-500 font-bold">Warning:</span> Violation recorded. Count: {violationCount}/{attempt?.maxViolations}.
           </div>
         </div>
       )}
